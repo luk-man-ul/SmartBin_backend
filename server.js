@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
 });
 
 // use routes
-app.use("/api/users", userRoutes); // 👈 all user-related routes start with /api/users
+app.use("/api", userRoutes); // 👈 all user-related routes start with /api/users
 
 // start server
 const PORT = process.env.PORT || 5000;
