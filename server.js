@@ -4,7 +4,11 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-const userRoutes = require("./routes/userRoutes"); //  the route
+const userRoutes = require("./routes/userRoutes");
+const binRoutes = require("./routes/binRoutes"); 
+const rewardRoutes = require("./routes/rewardRoutes");
+
+
 
 const app = express();
 
@@ -23,11 +27,12 @@ app.get("/", (req, res) => {
 });
 
 // use routes
-app.use("/api", userRoutes); // 👈 all user-related routes start with /api/users
+app.use("/api/users", userRoutes);   // existing user routes
+app.use("/api/bin", binRoutes);      // ✅ ADD THIS LINE (SmartBin routes)
+app.use("/api/history", rewardRoutes);
 
 // start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
-
