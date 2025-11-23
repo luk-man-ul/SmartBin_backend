@@ -32,7 +32,7 @@ async function sendMail(to, otp) {
   }
 }
 
-// ---------------- SIGNUP ----------------
+// ---------------- SIGNUP (Auto Login) ----------------
 router.post("/signup", async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -46,12 +46,28 @@ router.post("/signup", async (req, res) => {
     const newUser = new User({ name, email, password: hashedPassword });
     await newUser.save();
 
-    res.status(201).json({ message: "Signup successful" });
+    // 🔥 Create tokens (same as login)
+    const accessToken = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: "15m",
+    });
+
+    const refreshToken = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d"
+    });
+
+    // 🔥 Return tokens + user data
+    res.status(201).json({
+      message: "Signup successful",
+      user: newUser,
+      accessToken,
+      refreshToken
+    });
 
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 // ---------------- LOGIN + REMEMBER ME ----------------
 router.post("/login", async (req, res) => {
