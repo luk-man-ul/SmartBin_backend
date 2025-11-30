@@ -201,6 +201,5 @@ router.post("/refresh-token", (req, res) => {
     return res.status(403).json({ message: "Expired or invalid refresh token" });
   }
 });
-s
 
 module.exports = router;
