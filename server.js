@@ -5,15 +5,19 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 const userRoutes = require("./routes/userRoutes");
-const binRoutes = require("./routes/binRoutes"); 
+const binRoutes = require("./routes/binRoutes");
 const rewardRoutes = require("./routes/rewardRoutes");
-
-
 
 const app = express();
 
+// -------------------- CORS FIX --------------------
+app.use(cors({
+  origin: "http://localhost:5173",   // your frontend
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
+
 // middleware
-app.use(cors());
 app.use(express.json());
 
 // connect to MongoDB
@@ -27,12 +31,12 @@ app.get("/", (req, res) => {
 });
 
 // use routes
-app.use("/api/users", userRoutes);   // existing user routes
-app.use("/api/bin", binRoutes);      
+app.use("/api/users", userRoutes);
+app.use("/api/bin", binRoutes);
 app.use("/api/history", rewardRoutes);
 
 // start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
