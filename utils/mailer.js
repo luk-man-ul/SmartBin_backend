@@ -1,33 +1,22 @@
-const nodemailer = require("nodemailer");
-
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false,
-  },
-});
+const { Resend } = require("resend");
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendOTP = async (email, otp) => {
   try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+    await resend.emails.send({
+      from: "SmartBin <onboarding@resend.dev>",
       to: email,
       subject: "Your Login OTP",
       html: `
         <h2>Your OTP Code</h2>
         <p style="font-size:20px; font-weight:bold;">${otp}</p>
         <p>This OTP will expire in 2 minutes.</p>
-      `
+      `,
     });
+
     return true;
   } catch (error) {
-    console.log("Email Error:", error);
+    console.error("Email Error:", error);
     return false;
   }
 };
