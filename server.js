@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
 
 // use routes
 app.use("/api/users", userRoutes);   // existing user routes
-app.use("/api/bin", binRoutes);      // THIS LINE (SmartBin routes)
+app.use("/api/bin", binRoutes);      
 app.use("/api/history", rewardRoutes);
 
 // start server

@@ -132,6 +132,7 @@ router.post("/forgot-password", async (req, res) => {
 });
 
 // ---------------- VERIFY OTP ----------------
+// ---------------- VERIFY OTP ----------------
 router.post("/verify-otp", async (req, res) => {
   try {
     const { email, otp } = req.body;
