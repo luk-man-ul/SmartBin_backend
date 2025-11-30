@@ -12,7 +12,7 @@ const app = express();
 
 // -------------------- CORS FIX --------------------
 app.use(cors({
-  origin: "http://localhost:5173",   // your frontend
+  origin: "https://smartbin-project.netlify.app",   // your frontend
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
