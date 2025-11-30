@@ -179,4 +179,28 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// ---------------- REFRESH TOKEN ----------------
+router.post("/refresh-token", (req, res) => {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken)
+    return res.status(401).json({ message: "No refresh token provided" });
+
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
+
+    const newAccessToken = jwt.sign(
+      { id: decoded.id },
+      process.env.JWT_SECRET,
+      { expiresIn: "15m" }
+    );
+
+    return res.json({ accessToken: newAccessToken });
+
+  } catch (err) {
+    return res.status(403).json({ message: "Expired or invalid refresh token" });
+  }
+});
+s
+
 module.exports = router;
