@@ -1,24 +1,35 @@
-const { Resend } = require("resend");
-const resend = new Resend(process.env.RESEND_API_KEY);
+const SibApiV3Sdk = require("sib-api-v3-sdk");
 
-const sendOTP = async (email, otp) => {
+// Create Brevo API instance
+const client = SibApiV3Sdk.ApiClient.instance;
+client.authentications["api-key"].apiKey = process.env.BREVO_API_KEY;
+
+const transEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
+
+async function sendMail(to, otp) {
   try {
-    await resend.emails.send({
-      from: "SmartBin <onboarding@resend.dev>",
-      to: email,
-      subject: "Your Login OTP",
-      html: `
-        <h2>Your OTP Code</h2>
-        <p style="font-size:20px; font-weight:bold;">${otp}</p>
-        <p>This OTP will expire in 2 minutes.</p>
-      `,
-    });
+    //console.log("Sending OTP to:", to);
 
+    const mailPayload = {
+      sender: { email: "noreply.mailgateway@gmail.com", name: "SmartBin" },
+      to: [{ email: to }],
+      subject: "Your OTP Code",
+      htmlContent: `
+        <h2>Your OTP Code</h2>
+        <h1 style="color:blue;">${otp}</h1>
+        <p>This OTP will expire in 10 minutes.</p>
+      `,
+    };
+
+    await transEmailApi.sendTransacEmail(mailPayload);
+
+    //console.log("OTP SENT SUCCESSFULLY!");
     return true;
+
   } catch (error) {
-    console.error("Email Error:", error);
+    console.error("BREVO ERROR:", error.response?.text || error.message || error);
     return false;
   }
-};
+}
 
-module.exports = { sendOTP };
+module.exports = sendMail;
